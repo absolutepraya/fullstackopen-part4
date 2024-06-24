@@ -1,3 +1,5 @@
+const Blog = require('../models/blog')
+
 const oneBlog = [
     {
         _id: '5a422aa71b54a676234d17f8',
@@ -60,7 +62,22 @@ const blogs = [
     }
 ]
 
+const blogsInDb = async () => {
+    const blogs = await Blog.find({})
+    return blogs.map(blog => blog.toJSON())
+}
+
+const nonExistingId = async () => {
+    const blog = new Blog({ title: 'willremovethissoon', author: 'willremovethissoon', url: 'willremovethissoon', likes: 0 })
+    await blog.save()
+    await blog.remove()
+
+    return blog._id.toString()
+}
+
 module.exports = {
     oneBlog,
-    blogs
-};
+    blogs,
+    blogsInDb,
+    nonExistingId
+}
