@@ -121,6 +121,56 @@ describe('api POST test', () => {
     })
 })
 
+describe('api DELETE test' , () => {
+    test('a blog can be deleted', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToDelete = blogsAtStart[0]
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(204)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd.length, helper.blogs.length - 1)
+
+        const titles = blogsAtEnd.map(e => e.title)
+        assert(!titles.includes(blogToDelete.title))
+    })
+})
+
+describe('api PUT test', () => {
+    test('a blog can be updated', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToUpdate = blogsAtStart[0]
+
+        const updatedBlog = {
+            title: 'Updated Title',
+            author: 'Updated Author',
+            url: 'https://updated.com',
+            likes: 999
+        }
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(updatedBlog)
+            .expect(200)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        const updated = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+        assert.deepStrictEqual(updated, { ...blogToUpdate, ...updatedBlog })
+    })
+
+    test('if nothing is updated, return 400', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToUpdate = blogsAtStart[0]
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send({})
+            .expect(400)
+    })
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
