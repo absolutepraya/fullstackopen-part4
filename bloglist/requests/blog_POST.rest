@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "title": "The Witcher",
+    "userId": "667e7a4a02637eb748b1f4f3",
+    "url": "https://en.wikipedia.org/wiki/The_Witcher_(TV_series)",
+    "likes": 99
+}

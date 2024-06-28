@@ -1,5 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 // get all blogs
 blogsRouter.get('/', async (req, res) => {
@@ -9,7 +10,16 @@ blogsRouter.get('/', async (req, res) => {
 
 // add a new blog
 blogsRouter.post('/', async (req, res) => {
-    const blog = new Blog(req.body)
+    const body = req.body
+
+    const user = await User.findById(body.userId)
+
+    const blog = new Blog({
+        title: body.title,
+        author: user.id,
+        url: body.url,
+        likes: body.likes
+    })
 
     // error 400 if title or url are not present
     if (!blog.title || !blog.url) {
@@ -17,6 +27,11 @@ blogsRouter.post('/', async (req, res) => {
     }
 
     const savedBlog = await blog.save()
+
+    // add the blog to the user's blogs array
+    user.blogs = user.blogs.concat(savedBlog.id)
+    await user.save()
+
     res.status(201).json(savedBlog)
 })
 
