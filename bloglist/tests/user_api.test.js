@@ -44,8 +44,8 @@ describe('when there is initially one user in db', () => {
         const usersAtStart = await helper.usersInDb()
 
         const newUser = {
-            username: 'root',
-            name: 'Superuser2',
+            username: 'testuser',
+            name: 'Super Tester 2',
             password: 'secretpassword456'
         }
 
@@ -56,6 +56,48 @@ describe('when there is initially one user in db', () => {
             .expect('Content-Type', /application\/json/)
 
         assert(result.body.error.includes('username already taken'))
+
+        const usersAtEnd = await helper.usersInDb()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+    test('creation fails if username is less than 3 characters', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'te',
+            name: 'Super Tester 3',
+            password: 'secretpassword789'
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        assert(result.body.error.includes('username must be at least 3 characters long'))
+
+        const usersAtEnd = await helper.usersInDb()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+    test('creation fails if password is less than 3 characters', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'testusersuper',
+            name: 'Super Tester 4',
+            password: 'se'
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        assert(result.body.error.includes('password must be at least 3 characters long'))
 
         const usersAtEnd = await helper.usersInDb()
         assert.strictEqual(usersAtEnd.length, usersAtStart.length)

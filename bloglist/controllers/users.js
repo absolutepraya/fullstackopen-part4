@@ -16,6 +16,16 @@ usersRouter.post('/', async (req, res) => {
         return res.status(400).json({ error: 'username already taken' })
     }
 
+    // check if username is at least 3 characters long
+    if (username.length < 3) {
+        return res.status(400).json({ error: 'username must be at least 3 characters long' })
+    }
+
+    // check if password is at least 3 characters long
+    if (password.length < 3) {
+        return res.status(400).json({ error: 'password must be at least 3 characters long' })
+    }
+
     const salt = 10
     const passwordHash = await bcrypt.hash(password, salt)
 

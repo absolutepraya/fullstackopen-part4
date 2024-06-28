@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 // get all blogs
 blogsRouter.get('/', async (req, res) => {
@@ -11,8 +12,7 @@ blogsRouter.get('/', async (req, res) => {
 // add a new blog
 blogsRouter.post('/', async (req, res) => {
     const body = req.body
-
-    const user = await User.findById(body.userId)
+    const user = req.user
 
     const blog = new Blog({
         title: body.title,
@@ -37,12 +37,31 @@ blogsRouter.post('/', async (req, res) => {
 
 // delete a blog
 blogsRouter.delete('/:id', async (req, res) => {
+    const user = req.user
+
+    // check if the user is the author
+    const blog = await Blog.findById(req.params.id)
+    if (blog.author.toString() !== user.id) {
+        return res.status(401).json({ error: 'unauthorized' })
+    }
+
+    // remove the blog from user's blogs array
+    user.blogs = user.blogs.filter(b => b.toString() !== req.params.id)
+
     await Blog.findByIdAndDelete(req.params.id)
     res.status(204).end()
 })
 
 // update a blog
 blogsRouter.put('/:id', async (req, res) => {
+    const user = req.user
+
+    // // check if the user is the author
+    const blog = await Blog.findById(req.params.id)
+    if (blog.author.toString() !== user.id) {
+        return res.status(401).json({ error: 'unauthorized' })
+    }
+
     // if nothing is passed in the request body, return 400
     if (Object.keys(req.body).length === 0) {
         return res.status(400).json({ error: 'nothing to update' })

@@ -79,8 +79,8 @@ const nonExistingId = async () => {
 
 const oneUser = [
     {
-        username: 'root',
-        name: 'Superuser',
+        username: 'testuser',
+        name: 'Super Tester',
         password: bcrypt.hash('secretpassword123', 10)
     }
 ]

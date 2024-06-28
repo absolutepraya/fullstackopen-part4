@@ -1,9 +1,9 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im11cnJheWphbWFsIiwiaWQiOiI2NjdlYjY1ZDgyNTRmM2ZkN2IxMzU1MmEiLCJpYXQiOjE3MTk1ODA2NTR9.qjh_fwKD0T5vlL5n4PZfJKyaC-VZM0Imr3y1QkAKUlo
 
 {
-    "title": "The Witcher",
-    "userId": "667e7a4a02637eb748b1f4f3",
-    "url": "https://en.wikipedia.org/wiki/The_Witcher_(TV_series)",
-    "likes": 99
+    "title": "How I'm Gonna Win The NBA Finals",
+    "url": "https://nbasomethingsomething.com",
+    "likes": 2
 }
