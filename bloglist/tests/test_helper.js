@@ -81,9 +81,27 @@ const oneUser = [
     {
         username: 'testuser',
         name: 'Super Tester',
-        password: bcrypt.hash('secretpassword123', 10)
+        passwordHash: 'secretpassword123' // will be hashed
     }
 ]
+
+const users = [
+    {
+        username: 'testuser',
+        name: 'Super Tester',
+        passwordHash: 'secretpassword123' // will be hashed
+    },
+    {
+        username: 'testuser2',
+        name: '2nd Super Tester',
+        passwordHash: 'secretpassword456' // will be hashed
+    }
+]
+
+const hashPassword = async (password) => {
+    const saltRounds = 10
+    return await bcrypt.hash(password, saltRounds)
+}
 
 const usersInDb = async () => {
     const users = await User.find({})
@@ -97,5 +115,7 @@ module.exports = {
     nonExistingId,
 
     oneUser,
+    users,
+    hashPassword,
     usersInDb
 }

@@ -6,7 +6,11 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "cross-env  NODE_ENV=test node --test"
+    "test": "cross-env NODE_ENV=test node --test tests/blog.test.js && cross-env NODE_ENV=test node --test tests/blog_api.test.js && cross-env NODE_ENV=test node --test tests/user_api.test.js && cross-env NODE_ENV=test node --test tests/login_api.test.js",
+    "testblog": "cross-env NODE_ENV=test node --test tests/blog.test.js",
+    "testblog_api": "cross-env NODE_ENV=test node --test tests/blog_api.test.js",
+    "testuser_api": "cross-env NODE_ENV=test node --test tests/user_api.test.js",
+    "testlogin_api": "cross-env NODE_ENV=test node --test tests/login_api.test.js"
   },
   "author": "absolutepraya",
   "license": "ISC",

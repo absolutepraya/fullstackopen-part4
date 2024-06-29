@@ -1,7 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 
 // get all blogs
 blogsRouter.get('/', async (req, res) => {
@@ -13,6 +11,11 @@ blogsRouter.get('/', async (req, res) => {
 blogsRouter.post('/', async (req, res) => {
     const body = req.body
     const user = req.user
+
+    // error 401 if user is not logged in
+    if (!user) {
+        return res.status(401).json({ error: 'unauthorized' })
+    }
 
     const blog = new Blog({
         title: body.title,
@@ -26,6 +29,7 @@ blogsRouter.post('/', async (req, res) => {
         return res.status(400).json({ error: 'title or url missing' })
     }
 
+
     const savedBlog = await blog.save()
 
     // add the blog to the user's blogs array
@@ -38,6 +42,11 @@ blogsRouter.post('/', async (req, res) => {
 // delete a blog
 blogsRouter.delete('/:id', async (req, res) => {
     const user = req.user
+
+    // error 401 if user is not logged in
+    if (!user) {
+        return res.status(401).json({ error: 'unauthorized' })
+    }
 
     // check if the user is the author
     const blog = await Blog.findById(req.params.id)
@@ -56,7 +65,12 @@ blogsRouter.delete('/:id', async (req, res) => {
 blogsRouter.put('/:id', async (req, res) => {
     const user = req.user
 
-    // // check if the user is the author
+    // error 401 if user is not logged in
+    if (!user) {
+        return res.status(401).json({ error: 'unauthorized' })
+    }
+
+    // check if the user is the author
     const blog = await Blog.findById(req.params.id)
     if (blog.author.toString() !== user.id) {
         return res.status(401).json({ error: 'unauthorized' })

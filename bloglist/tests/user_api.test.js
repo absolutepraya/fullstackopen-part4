@@ -1,13 +1,14 @@
-const { test, after, beforeEach, describe } = require('node:test')
+const { test, beforeEach, after, describe } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 
-const bcrypt = require('bcrypt')
 const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const User = require('../models/user')
+
+console.log('\n—————————————————————————————————————————————\n') // to add spacing when run sequentially manually
 
 describe('when there is initially one user in db', () => {
     beforeEach(async () => {
@@ -102,4 +103,8 @@ describe('when there is initially one user in db', () => {
         const usersAtEnd = await helper.usersInDb()
         assert.strictEqual(usersAtEnd.length, usersAtStart.length)
     })
+})
+
+after(async () => {
+    await mongoose.connection.close()
 })

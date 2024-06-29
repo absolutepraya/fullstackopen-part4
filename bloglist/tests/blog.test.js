@@ -3,6 +3,8 @@ const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
 const helper = require('./test_helper')
 
+console.log('\n—————————————————————————————————————————————\n') // to add spacing when run sequentially manually
+
 describe('dummy test', () => {
     test('dummy returns one', () => {
         const blogs = []
